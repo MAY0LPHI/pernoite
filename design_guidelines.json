@@ -1,0 +1,115 @@
+{
+  "theme": "Dark",
+  "archetype": "2 (Performance Pro / Tactical Minimalism)",
+  "rationale": "The app is used by night-shift workers in parking lots. It requires high contrast, reduced glare, and large tap targets for fast, reliable field use.",
+  "colors": {
+    "background": "#0A0A0A",
+    "surface": "#121212",
+    "surface_high": "#1E1E1E",
+    "primary": "#FFCC00",
+    "primary_hover": "#E6B800",
+    "secondary": "#007AFF",
+    "secondary_hover": "#005BB5",
+    "text_primary": "#E0E0E0",
+    "text_secondary": "#888888",
+    "error": "#FF3B30",
+    "success": "#34C759",
+    "border": "#222222"
+  },
+  "typography": {
+    "headings": {
+      "font_family": "Oswald",
+      "weights": ["500", "700"],
+      "usage": "H1 for App Title, H2 for Screen Titles. Tracking-tight."
+    },
+    "body": {
+      "font_family": "Manrope",
+      "weights": ["400", "500", "600"],
+      "usage": "General UI text, inputs, button labels."
+    },
+    "mono": {
+      "font_family": "JetBrains Mono",
+      "weights": ["400", "700"],
+      "usage": "License plates, dates, times, data numbers."
+    },
+    "scale": {
+      "h1": "text-4xl sm:text-5xl uppercase tracking-tighter",
+      "h2": "text-2xl sm:text-3xl uppercase tracking-tight",
+      "h3": "text-xl sm:text-2xl",
+      "body": "text-base",
+      "small": "text-sm",
+      "plate": "text-xl tracking-widest font-mono"
+    }
+  },
+  "spacing_and_layout": {
+    "philosophy": "Generous spacing for tap targets (min 56px height for main actions). Mobile-first, single-column stack with gap-4 to gap-6.",
+    "container": "w-full max-w-md mx-auto p-4 sm:p-6 min-h-screen flex flex-col",
+    "buttons": "h-14 rounded-md flex items-center justify-center font-bold text-lg",
+    "cards": "p-4 border border-border bg-surface rounded-md",
+    "borders": "max 8px border-radius (rounded-md). Use 1px solid borders to define depth instead of shadows."
+  },
+  "components": {
+    "button": "Shadcn Button, override height to h-14, text-lg, font-bold. Primary buttons use bg-primary text-black. Secondary buttons use bg-surface_high text-text_primary border border-border.",
+    "input": "Shadcn Input, override height to h-14, bg-surface, border-border, text-text_primary. Focus ring should be primary color.",
+    "card": "Shadcn Card, remove default shadows, set bg-surface border-border.",
+    "icons": "lucide-react. Size 24px for standard buttons, 32px for main camera actions.",
+    "camera_frame": "Custom HTML div with border-2 border-primary/50 border-dashed rounded-lg flex flex-col items-center justify-center h-48 bg-surface_high/50 relative. Include corner markers (crosshairs) to simulate a viewfinder."
+  },
+  "pages": {
+    "InitialScreen": {
+      "layout": "Hero image background with heavy overlay (bg-black/80). Form centered.",
+      "elements": [
+        "Big Heading: 'VTR NOTURNO'",
+        "Input: Nome do Colaborador",
+        "Input: Horário de Entrada (Default 18:00)",
+        "Input: Horário de Saída (Default 06:00)",
+        "Input: Data (Default today)",
+        "Button: Iniciar Pernoite (Primary)"
+      ]
+    },
+    "SectorsScreen": {
+      "layout": "List of sectors. Header with 'Setores' and back button to edit shift details.",
+      "elements": [
+        "Card list for each sector (e.g., ZARP Localiza Vermelho/Amarelo, Setor 01). Clickable to navigate.",
+        "Button: Adicionar Novo Setor (Secondary)",
+        "Button: Revisar e Finalizar (Primary, fixed at bottom)"
+      ]
+    },
+    "ScanScreen": {
+      "layout": "Header with Sector Name. Split view: Top for scanning/adding, Bottom for list of cars.",
+      "elements": [
+        "Camera Viewfinder placeholder with 'Tirar Foto / Upload' button.",
+        "Manual entry form: Placa (Mono), Marca, Modelo, Cor.",
+        "Button: Adicionar Veículo (Primary)",
+        "List of added vehicles in this sector. Each item shows Brand, Model, Plate (Mono) and a Trash icon button."
+      ]
+    },
+    "FinalReviewScreen": {
+      "layout": "Header 'Resumo do Pernoite'. Text area displaying the formatted report.",
+      "elements": [
+        "Pre-formatted text block (Markdown/Text format as requested) inside a disabled textarea or pre tag, using font-mono for readability.",
+        "Button: Copiar Tudo (Primary, with Check icon on success)",
+        "Button: Salvar Histórico e Sair (Secondary)"
+      ]
+    }
+  },
+  "images": {
+    "splash_background": {
+      "url": "https://images.unsplash.com/photo-1637970067784-927e66e07e36?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzR8MHwxfHNlYXJjaHwyfHxwYXJraW5nJTIwbG90JTIwbmlnaHR8ZW58MHx8fGJsYWNrfDE3ODIzMzAzNzl8MA&ixlib=rb-4.1.0&q=85",
+      "description": "Empty parking garage at night. Use as a fixed background for the Initial Screen with a heavy bg-[#0A0A0A]/85 overlay to ensure text contrast."
+    }
+  },
+  "testing": {
+    "attributes": "All interactive elements MUST include data-testid. Examples: data-testid='input-colaborador', data-testid='btn-iniciar-pernoite', data-testid='sector-card-{id}', data-testid='btn-camera', data-testid='input-placa', data-testid='btn-remover-veiculo', data-testid='btn-copiar-tudo'."
+  },
+  "instructions_to_main_agent": [
+    "Use JavaScript (.js/.jsx) for all React components. Do not use TypeScript (.ts/.tsx).",
+    "App must be fully responsive, focusing primarily on mobile viewports (max-w-md mx-auto container for web).",
+    "Implement the 'Camera/Upload' as a visual placeholder or a file input (accept='image/*') that simulates an AI scan by auto-filling the manual form after a brief loading state.",
+    "Store data locally (localStorage or React state context) for the 'Histórico por data' feature.",
+    "Implement the exact WhatsApp output format requested in the problem statement.",
+    "Do not use generic blue 'SaaS' colors. Strictly use the defined Tactical Dark Mode colors.",
+    "Do not use Inter for headings. Use Oswald for headings and Manrope for body text. Ensure you import them from Google Fonts in index.css or index.html.",
+    "All inputs and buttons must be large (h-14) for ease of use in the field."
+  ]
+}

@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 0 0% 4%;
+        --foreground: 0 0% 88%;
+        --card: 0 0% 7%;
+        --card-foreground: 0 0% 88%;
+        --popover: 0 0% 7%;
+        --popover-foreground: 0 0% 88%;
+        --primary: 48 100% 50%;
+        --primary-foreground: 0 0% 6%;
+        --secondary: 0 0% 12%;
+        --secondary-foreground: 0 0% 88%;
+        --muted: 0 0% 12%;
+        --muted-foreground: 0 0% 53%;
+        --accent: 48 100% 50%;
+        --accent-foreground: 0 0% 6%;
+        --destructive: 4 90% 58%;
+        --destructive-foreground: 0 0% 98%;
+        --border: 0 0% 14%;
+        --input: 0 0% 12%;
+        --ring: 48 100% 50%;
+        --radius: 0.5rem;
+    }
+}
+
+@layer base {
+    * { @apply border-border; }
+    html, body, #root {
+        background: hsl(var(--background));
+        color: hsl(var(--foreground));
+        min-height: 100%;
+    }
+    body {
+        margin: 0;
+        font-family: 'Manrope', system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+    .font-heading { font-family: 'Oswald', sans-serif; letter-spacing: -0.01em; }
+    .font-mono-plate { font-family: 'JetBrains Mono', monospace; letter-spacing: 0.12em; }
+}
+
+/* Subtle grain texture */
+.grain-bg {
+    background-color: #0A0A0A;
+    background-image:
+        radial-gradient(circle at 25% 30%, rgba(255, 204, 0, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(0, 122, 255, 0.04) 0%, transparent 40%);
+}
+
+.diagonal-stripes {
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255, 204, 0, 0.06) 0px,
+        rgba(255, 204, 0, 0.06) 8px,
+        transparent 8px,
+        transparent 16px
+    );
+}
+
+/* Camera viewfinder corner markers */
+.viewfinder-corner {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border: 2px solid hsl(var(--primary));
+}
+.viewfinder-corner.tl { top: 8px; left: 8px; border-right: 0; border-bottom: 0; }
+.viewfinder-corner.tr { top: 8px; right: 8px; border-left: 0; border-bottom: 0; }
+.viewfinder-corner.bl { bottom: 8px; left: 8px; border-right: 0; border-top: 0; }
+.viewfinder-corner.br { bottom: 8px; right: 8px; border-left: 0; border-top: 0; }
+
+::selection { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
