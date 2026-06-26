@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PageShell from "@/components/PageShell";
 import CameraCapture from "@/components/CameraCapture";
-import { createVehicle, lookupVehicle, enrichPlate, scanPlate, isHybridMode } from "@/lib/api";
+import { getSession, updateSession, createVehicle, lookupVehicle, enrichPlate, scanPlate, isHybridMode } from "@/lib/api";
 import { normalizePlate, formatPlate, isValidPlate } from "@/lib/plate";
 import { recognizePlateLocal } from "@/lib/ocr";
 
