@@ -28,10 +28,10 @@ async function getWorker() {
           }
         },
       });
-      // Configura para leitura rápida (modo single line / block)
+      // Configura para procurar texto esparso na imagem toda, e não apenas em uma linha
       await worker.setParameters({
         tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-        tessedit_pageseg_mode: "7", // Treat image as single text line
+        tessedit_pageseg_mode: "11", // Sparse text: acha qualquer bloco de texto solto
       });
       _worker = worker;
       _workerReady = true;
