@@ -21,7 +21,11 @@ async function initPaddleOCR() {
 
   modelLoadingPromise = (async () => {
     try {
-      // Configura ort para usar WebGL se disponível (GPU do celular)
+      // Configura os caminhos do WASM para carregar do CDN público oficial da Microsoft
+      // Isso evita erro de arquivos ausentes no build local do React/Vite
+      ort.env.wasm.wasmPaths = "https://cdnjs.cloudflare.com/ajax/libs/onnxruntime-web/1.16.3/";
+
+      // Configura ort para usar WebGL se disponível (GPU do celular), senão WASM (CPU)
       const options = { executionProviders: ["webgl", "wasm"] };
       
       console.log("[PaddleOCR] Carregando modelos...");
