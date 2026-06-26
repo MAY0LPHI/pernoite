@@ -146,18 +146,10 @@ export default function BatchScanPage() {
     }, 30000);
 
     try {
-      // ─── ETAPA 1: OCR local (sem internet, sem tokens) ─────────────────────
-      // A fila serial em ocr.js garante que apenas 1 imagem é processada por vez
-      const local = await recognizePlateLocal(cur.b64);
-      const plateRaw = local.plate || "";
-
-      // Se OCR local falhou, tenta via IA (fallback)
-      let finalPlate = plateRaw;
-      let usedAiForPlate = false;
-      if (!plateRaw) {
-        finalPlate = await readPlateOnly(cur.b64);
-        usedAiForPlate = true;
-      }
+      // ─── ETAPA 1: Tenta ler com IA ─────────────────────
+      // Chama scanPlate que extrai a placa E a marca/modelo em uma única requisição (economiza a cota da IA)
+      const scanRes = await scanPlate(cur.b64);
+      const finalPlate = scanRes.plate || "";
 
       if (!finalPlate) {
         setItems((prev) => prev.map((it) =>
@@ -191,34 +183,21 @@ export default function BatchScanPage() {
         return;
       }
 
-      // ─── ETAPA 3: Verifica banco local (pernoites anteriores) ────────────────
-      // Se encontrar: ZERO chamadas extras à IA!
-      const lookup = await lookupVehicle(finalPlate);
-      if (lookup.found) {
-        setItems((prev) => prev.map((it) =>
-          it.id === itemId
-            ? { ...it, status: "done", plate: finalPlate, brand: lookup.vehicle.brand || "", model: lookup.vehicle.model || "", source: "registry", error: "" }
-            : it
-        ));
-        return;
-      }
-
-      // ─── ETAPA 4: Placa nova — chama IA apenas para marca/modelo ───────────
-      // Só chega aqui se a placa não está em nenhum pernoite anterior
-      try {
-        const enriched = await enrichPlate(finalPlate, cur.b64);
-        setItems((prev) => prev.map((it) =>
-          it.id === itemId
-            ? { ...it, status: "done", plate: enriched.plate || finalPlate, brand: enriched.brand || "", model: enriched.model || "", source: usedAiForPlate ? "ai" : "local", error: "" }
-            : it
-        ));
-      } catch {
-        setItems((prev) => prev.map((it) =>
-          it.id === itemId
-            ? { ...it, status: "done", plate: finalPlate, brand: "", model: "", source: "local", error: "" }
-            : it
-        ));
-      }
+      // ─── ETAPA 3: Sucesso — salva item com todos os dados ───────────
+      // O scanPlate já buscou no registro local (from_registry) ou usou a IA.
+      setItems((prev) => prev.map((it) =>
+        it.id === itemId
+          ? { 
+              ...it, 
+              status: "done", 
+              plate: finalPlate, 
+              brand: scanRes.brand || "", 
+              model: scanRes.model || "", 
+              source: scanRes.from_registry ? "registry" : "ai", 
+              error: "" 
+            }
+          : it
+      ));
     } catch (e) {
       console.error("Batch item failed:", e);
       setItems((prev) =>
