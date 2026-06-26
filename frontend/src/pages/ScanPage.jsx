@@ -169,7 +169,8 @@ export default function ScanPage() {
         }
         setCameraOpen(false);
       }
-    } catch {
+    } catch (err) {
+      console.error("Erro no handleScan:", err);
       toast.error("Falha ao reconhecer. Digite manualmente.");
     } finally {
       clearTimeout(safetyTimer);
