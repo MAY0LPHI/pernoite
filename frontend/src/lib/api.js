@@ -9,13 +9,9 @@
 
 import { GEMINI_KEYS } from "@/lib/keys";
 
-// ─── Configuração do Modo Híbrido ────────────────────────────────────────────
-// Chave mestra global: Se true, desativa o Tesseract e usa 100% IA para TODOS.
-export const GLOBAL_FORCE_AI = false;
-
 // ─── Helpers de Storage ──────────────────────────────────────────────────────
 
-export function readLS(key, fallback) {
+function readLS(key, fallback) {
   try {
     const raw = localStorage.getItem(key);
     return raw ? JSON.parse(raw) : fallback;
@@ -24,20 +20,8 @@ export function readLS(key, fallback) {
   }
 }
 
-export function writeLS(key, value) {
+function writeLS(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
-}
-
-// ─── Gerenciamento do Modo Híbrido ───────────────────────────────────────────
-export function isHybridMode() {
-  if (GLOBAL_FORCE_AI) return false;
-  return readLS("vtr_hybrid_mode", false); // Default é false (100% IA) se não clicou na lua
-}
-
-export function toggleHybridMode() {
-  const current = isHybridMode();
-  writeLS("vtr_hybrid_mode", !current);
-  return !current;
 }
 
 function uuid() {
@@ -331,10 +315,9 @@ async function getAvailableKey(retries = 0) {
 
 async function callGemini(base64, mimeType = "image/jpeg", retries = 0) {
   const { key, idx } = await getAvailableKey(retries);
-  // Usando gemini-1.5-flash (rápido e 100% estável)
-  // Agora que a IA está recebendo a foto do carro inteiro (b64Full),
-  // o modelo consegue enxergar a marca e modelo perfeitamente!
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+  // O modelo Flash-8B é rápido, mas estava falhando para identificar a marca/modelo do carro.
+  // Voltando para o gemini-2.5-flash (mais inteligente) aliado à imagem reduzida, ainda será muito rápido.
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
 
   const payload = {
     contents: [
@@ -474,7 +457,7 @@ export async function readPlateOnly(imageBase64, retries = 0) {
   }
   
   const { key, idx } = keyData;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
 
   const payload = {
     contents: [{

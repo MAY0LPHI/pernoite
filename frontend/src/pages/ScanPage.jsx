@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PageShell from "@/components/PageShell";
 import CameraCapture from "@/components/CameraCapture";
-import { getSession, updateSession, createVehicle, lookupVehicle, enrichPlate, scanPlate, isHybridMode } from "@/lib/api";
+import { getSession, updateSession, readPlateOnly, enrichPlate, lookupVehicle } from "@/lib/api";
 import { normalizePlate, formatPlate, isValidPlate } from "@/lib/plate";
 import { recognizePlateLocal } from "@/lib/ocr";
 
@@ -97,81 +97,63 @@ export default function ScanPage() {
     }
   }
 
-  async function handleScan(captureData) {
-    // A captura agora retorna um objeto ou uma string dependendo se veio do input file ou da camera
-    const b64Crop = captureData?.b64Crop || captureData;
-    const b64Full = captureData?.b64Full || captureData;
+  async function handleScan(b64) {
     setScanning(true);
     const safetyTimer = setTimeout(() => setScanning(false), 25000);
     try {
-      if (isHybridMode()) {
-        // ==========================================
-        // MODO HÍBRIDO (Economia de IA)
-        // ==========================================
-        // ─── ETAPA 1: OCR local (Tesseract — sem internet, sem tokens) ──────────
-        const local = await recognizePlateLocal(b64Crop);
+      // ─── ETAPA 1: OCR local (Tesseract — sem internet, sem tokens) ──────────
+      const local = await recognizePlateLocal(b64);
 
-        if (local.plate) {
-          // Placa lida localmente!
-          setPlate(local.plate);
+      if (local.plate) {
+        // Placa lida localmente!
+        setPlate(local.plate);
 
-          // ─── ETAPA 2: Busca dados no banco local (pernoites anteriores) ───────
-          const lookup = await lookupVehicle(local.plate);
-          if (lookup.found) {
-            // ✅ Dados encontrados localmente — ZERO tokens gastos!
-            if (lookup.vehicle.brand) setBrand(lookup.vehicle.brand);
-            if (lookup.vehicle.model) setModel(lookup.vehicle.model);
-            setLastSource("registry");
-            toast.success("✅ Lido localmente + dados do cadastro — nenhum token gasto!");
-            setCameraOpen(false);
-            return;
-          }
-
-          // ─── ETAPA 3: Placa nova — chama IA só para marca/modelo ─────────────
-          try {
-            const res = await enrichPlate(local.plate, b64Full);
-            if (res.brand) setBrand(res.brand);
-            if (res.model) setModel(res.model);
-            setLastSource("ai");
-            toast.success("🤖 Placa lida localmente + IA identificou o veículo");
-          } catch {
-            toast.success("📷 Placa lida localmente — adicione marca/modelo manualmente");
-          }
+        // ─── ETAPA 2: Busca dados no banco local (pernoites anteriores) ───────
+        const lookup = await lookupVehicle(local.plate);
+        if (lookup.found) {
+          // ✅ Dados encontrados localmente — ZERO tokens gastos!
+          if (lookup.vehicle.brand) setBrand(lookup.vehicle.brand);
+          if (lookup.vehicle.model) setModel(lookup.vehicle.model);
+          setLastSource("registry");
+          toast.success("✅ Lido localmente + dados do cadastro — nenhum token gasto!");
           setCameraOpen(false);
           return;
         }
 
-        // ─── FALLBACK: OCR local falhou — usa IA para tudo ──────────────────────
-        const scanRes = await scanPlate(b64Full);
-        if (scanRes.plate) {
-          setPlate(scanRes.plate);
-          if (scanRes.brand) setBrand(scanRes.brand);
-          if (scanRes.model) setModel(scanRes.model);
-          setLastSource(scanRes.from_registry ? "registry" : "ai");
-          toast.success("✨ IA leu a placa e identificou o veículo (Fallback)");
-        } else {
-          toast.error("Nenhuma placa identificada. Tente novamente.");
+        // ─── ETAPA 3: Placa nova — chama IA só para marca/modelo ─────────────
+        // A placa já sabemos (lida pelo OCR local), IA só precisa identificar o carro
+        try {
+          const res = await enrichPlate(local.plate, b64);
+          if (res.brand) setBrand(res.brand);
+          if (res.model) setModel(res.model);
+          setLastSource("ai");
+          toast.success("🤖 Placa lida localmente + IA identificou o veículo");
+        } catch {
+          toast.success("📷 Placa lida localmente — adicione marca/modelo manualmente");
         }
         setCameraOpen(false);
-      } else {
-        // ==========================================
-        // MODO 100% IA (Velocidade e Precisão)
-        // ==========================================
-        const scanRes = await scanPlate(b64Full);
-        if (scanRes.plate) {
-          setPlate(scanRes.plate);
-          if (scanRes.brand) setBrand(scanRes.brand);
-          if (scanRes.model) setModel(scanRes.model);
-          setLastSource(scanRes.from_registry ? "registry" : "ai");
-          toast.success("✨ Lida pela Inteligência Artificial");
-        } else {
-          toast.error("A IA não encontrou placa nesta foto.");
-        }
+        return;
+      }
+
+      // ─── FALLBACK: OCR local falhou — usa IA para tudo ──────────────────────
+      // Só chega aqui se o Tesseract não conseguiu ler a placa na foto
+      const plateRaw = await readPlateOnly(b64);
+      if (plateRaw) {
+        setPlate(plateRaw);
+        const res = await enrichPlate(plateRaw, b64);
+        if (res.brand) setBrand(res.brand);
+        if (res.model) setModel(res.model);
+        setLastSource(res.from_registry ? "registry" : "ai");
+        toast.success(
+          res.from_registry
+            ? "✅ IA leu a placa + dados do cadastro"
+            : "🤖 IA reconheceu a placa e o veículo"
+        );
         setCameraOpen(false);
       }
-    } catch (err) {
-      console.error("Erro no handleScan:", err);
-      toast.error(`Erro: ${err?.message || "Falha ao reconhecer. Digite manualmente."}`);
+      // else: modo auto continua tentando silenciosamente
+    } catch {
+      toast.error("Falha ao reconhecer. Digite manualmente.");
     } finally {
       clearTimeout(safetyTimer);
       setScanning(false);

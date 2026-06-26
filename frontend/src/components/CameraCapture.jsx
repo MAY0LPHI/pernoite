@@ -73,7 +73,9 @@ export default function CameraCapture({ open, onClose, onCapture, scanning, defa
     const w = v.videoWidth || 1280;
     const h = v.videoHeight || 720;
     
-    // ─── 1. Foto Completa (para a IA ver a marca/modelo) ───
+    // Como estamos usando a IA (Gemini) para ler tudo, precisamos enviar a foto inteira (full frame)
+    // para que a IA consiga enxergar o carro e identificar a marca e modelo.
+    // O crop visual na tela serve apenas para ajudar o usuário a centralizar.
     const max = 800; // Reduz a resolução para upload rápido
     let cw = w, ch = h;
     if (w > max || h > max) {
@@ -83,37 +85,18 @@ export default function CameraCapture({ open, onClose, onCapture, scanning, defa
     const canvas = document.createElement("canvas");
     canvas.width = cw;
     canvas.height = ch;
+    // Desenha o frame completo
     canvas.getContext("2d").drawImage(v, 0, 0, cw, ch);
-    const b64Full = canvas.toDataURL("image/jpeg", 0.85).split(",")[1];
-
-    // ─── 2. Foto Recortada (para o Tesseract ler a placa localmente) ───
-    const cropW = w * 0.80; 
-    const cropH = cropW * 0.40; 
-    const startX = (w - cropW) / 2;
-    const startY = (h - cropH) / 2;
-
-    const cropMax = 800;
-    let cwCrop = cropW, chCrop = cropH;
-    if (cropW > cropMax || cropH > cropMax) {
-      if (cropW > cropH) { chCrop = Math.round(cropH * cropMax / cropW); cwCrop = cropMax; }
-      else { cwCrop = Math.round(cropW * cropMax / cropH); chCrop = cropMax; }
-    }
-    const cropCanvas = document.createElement("canvas");
-    cropCanvas.width = cwCrop;
-    cropCanvas.height = chCrop;
-    cropCanvas.getContext("2d").drawImage(v, startX, startY, cropW, cropH, 0, 0, cwCrop, chCrop);
-    const b64Crop = cropCanvas.toDataURL("image/jpeg", 0.9).split(",")[1];
-
-    return { b64Full, b64Crop };
+    return canvas.toDataURL("image/jpeg", 0.85).split(",")[1];
   }
 
   function manualCapture() {
-    const res = captureFrame();
-    if (!res) {
+    const b64 = captureFrame();
+    if (!b64) {
       toast.error("Câmera não está pronta");
       return;
     }
-    onCapture(res);
+    onCapture(b64);
   }
 
   // Auto-scan loop: while autoMode is on, ready and not scanning, capture every 2.2s
