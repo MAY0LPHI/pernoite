@@ -21,6 +21,7 @@ function getWorker() {
       });
       await w.setParameters({
         tessedit_pageseg_mode: "3", // Modo automático de segmentação (melhor para fotos completas do veículo)
+        tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", // Restringe a letras e números
       });
       return w;
     })();
@@ -73,15 +74,31 @@ function preprocessImage(base64Jpeg) {
       const ctx = canvas.getContext("2d");
       ctx.drawImage(img, 0, 0, w, h);
       
-      // Convertemos para tons de cinza simples para melhorar legibilidade, mas sem binarizar de forma agressiva
+      // Filtros de Imagem para OCR (Contraste + Binarização Adaptativa Leve)
       const imageData = ctx.getImageData(0, 0, w, h);
       const px = imageData.data;
+      
+      // 1. Converte para tons de cinza com peso otimizado + aumenta contraste
       for (let i = 0; i < px.length; i += 4) {
-        const g = Math.round(0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2]);
-        px[i] = px[i + 1] = px[i + 2] = g;
+        // Luminosidade base
+        let v = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
+        
+        // Aumenta o contraste (valores escuros ficam mais escuros, claros mais claros)
+        if (v < 128) {
+          v = Math.max(0, v - (128 - v) * 0.5);
+        } else {
+          v = Math.min(255, v + (v - 128) * 0.5);
+        }
+        
+        // Binarização simples com limiar suave
+        const threshold = 110;
+        const finalVal = v < threshold ? 0 : 255;
+        
+        px[i] = px[i + 1] = px[i + 2] = finalVal;
       }
+      
       ctx.putImageData(imageData, 0, 0);
-      resolve(canvas.toDataURL("image/jpeg", 0.85));
+      resolve(canvas.toDataURL("image/jpeg", 0.90));
     };
     img.onerror = () => resolve(`data:image/jpeg;base64,${base64Jpeg}`);
     img.src = `data:image/jpeg;base64,${base64Jpeg}`;
