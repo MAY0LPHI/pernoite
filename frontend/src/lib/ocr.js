@@ -28,11 +28,11 @@ async function getWorker() {
           }
         },
       });
-      // Como agora a imagem é recortada exatamente no formato da placa,
-      // forçamos o modo "7" (linha única) para garantir que ele leia da esquerda para a direita na ordem certa.
+      // O modo "6" (bloco único de texto) é o mais equilibrado: 
+      // ele garante a leitura da esquerda para a direita, mas é mais tolerante a ruídos/bordas que o modo 7.
       await worker.setParameters({
         tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-        tessedit_pageseg_mode: "7", // Single text line: força a ordem correta dos caracteres
+        tessedit_pageseg_mode: "6", // Assume a single uniform block of text
       });
       _worker = worker;
       _workerReady = true;
