@@ -72,17 +72,26 @@ export default function CameraCapture({ open, onClose, onCapture, scanning, defa
     if (!v || !ready) return null;
     const w = v.videoWidth || 1280;
     const h = v.videoHeight || 720;
-    const max = 1280;
-    let cw = w, ch = h;
-    if (w > max || h > max) {
-      if (w > h) { ch = Math.round(h * max / w); cw = max; }
-      else { cw = Math.round(w * max / h); ch = max; }
+    
+    // Para melhorar o OCR local, vamos recortar apenas o centro da imagem
+    // (onde fica o quadrado amarelo do viewfinder na tela), descartando fundo.
+    const cropW = w * 0.7; // 70% da largura
+    const cropH = h * 0.4; // 40% da altura
+    const startX = (w - cropW) / 2;
+    const startY = (h - cropH) / 2;
+    
+    const max = 800; // Resolução menor é suficiente e mais rápida para o OCR
+    let cw = cropW, ch = cropH;
+    if (cropW > max || cropH > max) {
+      if (cropW > cropH) { ch = Math.round(cropH * max / cropW); cw = max; }
+      else { cw = Math.round(cropW * max / cropH); ch = max; }
     }
     const canvas = document.createElement("canvas");
     canvas.width = cw;
     canvas.height = ch;
-    canvas.getContext("2d").drawImage(v, 0, 0, cw, ch);
-    return canvas.toDataURL("image/jpeg", 0.82).split(",")[1];
+    // Desenha apenas o pedaço central no canvas
+    canvas.getContext("2d").drawImage(v, startX, startY, cropW, cropH, 0, 0, cw, ch);
+    return canvas.toDataURL("image/jpeg", 0.9).split(",")[1];
   }
 
   function manualCapture() {
