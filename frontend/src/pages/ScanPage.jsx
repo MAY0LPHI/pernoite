@@ -171,7 +171,7 @@ export default function ScanPage() {
       }
     } catch (err) {
       console.error("Erro no handleScan:", err);
-      toast.error("Falha ao reconhecer. Digite manualmente.");
+      toast.error(`Erro: ${err?.message || "Falha ao reconhecer. Digite manualmente."}`);
     } finally {
       clearTimeout(safetyTimer);
       setScanning(false);

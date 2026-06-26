@@ -244,7 +244,7 @@ export default function BatchScanPage() {
     } catch (e) {
       console.error("Batch item failed:", e);
       setItems((prev) =>
-        prev.map((it) => (it.id === itemId ? { ...it, status: "error", error: "Falha no reconhecimento" } : it))
+        prev.map((it) => (it.id === itemId ? { ...it, status: "error", error: `Falha: ${e?.message || "Desconhecida"}` } : it))
       );
     } finally {
       clearTimeout(safety);
