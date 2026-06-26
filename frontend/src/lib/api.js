@@ -45,6 +45,7 @@ const DEFAULT_SECTORS = [
   "SETOR 02",
   "SETOR 03",
   "SETOR 05",
+  "BOLSÃO DE MOTO",
 ];
 
 function ensureSectors() {
