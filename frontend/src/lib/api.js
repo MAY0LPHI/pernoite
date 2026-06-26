@@ -9,9 +9,13 @@
 
 import { GEMINI_KEYS } from "@/lib/keys";
 
+// ─── Configuração do Modo Híbrido ────────────────────────────────────────────
+// Chave mestra global: Se true, desativa o Tesseract e usa 100% IA para TODOS.
+export const GLOBAL_FORCE_AI = false;
+
 // ─── Helpers de Storage ──────────────────────────────────────────────────────
 
-function readLS(key, fallback) {
+export function readLS(key, fallback) {
   try {
     const raw = localStorage.getItem(key);
     return raw ? JSON.parse(raw) : fallback;
@@ -20,8 +24,20 @@ function readLS(key, fallback) {
   }
 }
 
-function writeLS(key, value) {
+export function writeLS(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
+}
+
+// ─── Gerenciamento do Modo Híbrido ───────────────────────────────────────────
+export function isHybridMode() {
+  if (GLOBAL_FORCE_AI) return false;
+  return readLS("vtr_hybrid_mode", false); // Default é false (100% IA) se não clicou na lua
+}
+
+export function toggleHybridMode() {
+  const current = isHybridMode();
+  writeLS("vtr_hybrid_mode", !current);
+  return !current;
 }
 
 function uuid() {

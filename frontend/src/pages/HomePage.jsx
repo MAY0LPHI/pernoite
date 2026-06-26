@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Moon, Settings2, History as HistoryIcon, ChevronRight } from "lucide-react";
 import PageShell from "@/components/PageShell";
-import { createSession, listSessions } from "@/lib/api";
+import { createSession, listSessions, isHybridMode, toggleHybridMode } from "@/lib/api";
 import { setActiveSession } from "@/lib/storage";
 
 function todayBR() {
@@ -57,7 +57,14 @@ export default function HomePage() {
     >
       <div className="diagonal-stripes border border-border rounded-md p-5 bg-card">
         <div className="flex items-center gap-3 mb-1">
-          <Moon className="h-5 w-5 text-primary" strokeWidth={2.5} />
+          <Moon 
+            className="h-5 w-5 text-primary cursor-pointer hover:text-yellow-400 transition-colors" 
+            strokeWidth={2.5} 
+            onClick={() => {
+              const novo = toggleHybridMode();
+              toast.success(novo ? "Modo Híbrido (Economia) Ativado 🌙" : "Modo 100% IA (Rapidez) Ativado 🚀");
+            }}
+          />
           <span className="font-heading uppercase tracking-wider text-xs text-muted-foreground">
             Iniciar Turno
           </span>

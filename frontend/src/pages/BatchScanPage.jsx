@@ -5,7 +5,7 @@ import { Upload, Plus, Trash2, Loader2, CheckCircle2, AlertCircle, Sparkles, Dat
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import PageShell from "@/components/PageShell";
-import { getSession, updateSession, readPlateOnly, enrichPlate, lookupVehicle, scanPlate } from "@/lib/api";
+import { getSession, updateSession, createVehicle, lookupVehicle, enrichPlate, scanPlate, isHybridMode } from "@/lib/api";
 import { normalizePlate, formatPlate, isValidPlate } from "@/lib/plate";
 import { recognizePlateLocal } from "@/lib/ocr";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -145,59 +145,101 @@ export default function BatchScanPage() {
       );
     }, 30000);
 
-    try {
-      // ─── ETAPA 1: Tenta ler com IA ─────────────────────
-      // Chama scanPlate que extrai a placa E a marca/modelo em uma única requisição (economiza a cota da IA)
-      const scanRes = await scanPlate(cur.b64);
-      const finalPlate = scanRes.plate || "";
+      if (isHybridMode()) {
+        // ==========================================
+        // MODO HÍBRIDO (Economia de IA)
+        // ==========================================
+        const local = await recognizePlateLocal(cur.b64Crop || cur.b64);
+        let finalPlate = local.plate || "";
+        let usedAiForPlate = false;
 
-      if (!finalPlate) {
-        setItems((prev) => prev.map((it) =>
-          it.id === itemId ? { ...it, status: "needs_input", source: null } : it
-        ));
-        return;
-      }
+        const checkDup = async (p, extra = {}) => {
+          const inSector = (sector?.vehicles || []).some((v) => v.plate === p);
+          if (inSector) {
+            setItems((prev) => prev.map((it) => it.id === itemId ? { ...it, status: "duplicate", plate: p, ...extra, source: "duplicate", error: "Já no setor" } : it));
+            return true;
+          }
+          const dupItem = await new Promise((r) => setItems((prev) => { r(prev.find((x) => x.id !== itemId && x.plate === p && (x.status === "done" || x.status === "duplicate"))); return prev; }));
+          if (dupItem) {
+            setItems((prev) => prev.map((it) => it.id === itemId ? { ...it, status: "duplicate", plate: p, brand: dupItem.brand || extra.brand, model: dupItem.model || extra.model, source: "duplicate", error: "Foto duplicada" } : it));
+            return true;
+          }
+          return false;
+        };
 
-      // ─── ETAPA 2: Verifica duplicatas ────────────────────────────────────
-      const inSector = (sector?.vehicles || []).some((v) => v.plate === finalPlate);
-      if (inSector) {
+        if (!finalPlate) {
+          const scanRes = await scanPlate(cur.b64Full || cur.b64);
+          finalPlate = scanRes.plate || "";
+          usedAiForPlate = true;
+          
+          if (!finalPlate) {
+            setItems((prev) => prev.map((it) => it.id === itemId ? { ...it, status: "needs_input", source: null } : it));
+            return;
+          }
+          
+          if (scanRes.brand || scanRes.model) {
+            if (await checkDup(finalPlate, { brand: scanRes.brand, model: scanRes.model })) return;
+            setItems((prev) => prev.map((it) => it.id === itemId ? { ...it, status: "done", plate: finalPlate, brand: scanRes.brand || "", model: scanRes.model || "", source: scanRes.from_registry ? "registry" : "ai", error: "" } : it));
+            return;
+          }
+        }
+
+        if (!finalPlate) {
+          setItems((prev) => prev.map((it) => it.id === itemId ? { ...it, status: "needs_input", source: null } : it));
+          return;
+        }
+
+        if (await checkDup(finalPlate)) return;
+
+        // Verifica banco local (pernoites anteriores)
+        const lookup = await lookupVehicle(finalPlate);
+        if (lookup.found) {
+          setItems((prev) => prev.map((it) => it.id === itemId ? { ...it, status: "done", plate: finalPlate, brand: lookup.vehicle.brand || "", model: lookup.vehicle.model || "", source: "registry", error: "" } : it));
+          return;
+        }
+
+        // Placa nova — chama IA apenas para marca/modelo
+        try {
+          const enriched = await enrichPlate(finalPlate, cur.b64Full || cur.b64);
+          setItems((prev) => prev.map((it) => it.id === itemId ? { ...it, status: "done", plate: enriched.plate || finalPlate, brand: enriched.brand || "", model: enriched.model || "", source: usedAiForPlate ? "ai" : "local", error: "" } : it));
+        } catch {
+          setItems((prev) => prev.map((it) => it.id === itemId ? { ...it, status: "done", plate: finalPlate, brand: "", model: "", source: "local", error: "" } : it));
+        }
+
+      } else {
+        // ==========================================
+        // MODO 100% IA (Velocidade)
+        // ==========================================
+        const checkDup = async (p, extra = {}) => {
+          const inSector = (sector?.vehicles || []).some((v) => v.plate === p);
+          if (inSector) {
+            setItems((prev) => prev.map((it) => it.id === itemId ? { ...it, status: "duplicate", plate: p, ...extra, source: "duplicate", error: "Já no setor" } : it));
+            return true;
+          }
+          const dupItem = await new Promise((r) => setItems((prev) => { r(prev.find((x) => x.id !== itemId && x.plate === p && (x.status === "done" || x.status === "duplicate"))); return prev; }));
+          if (dupItem) {
+            setItems((prev) => prev.map((it) => it.id === itemId ? { ...it, status: "duplicate", plate: p, brand: dupItem.brand || extra.brand, model: dupItem.model || extra.model, source: "duplicate", error: "Foto duplicada" } : it));
+            return true;
+          }
+          return false;
+        };
+
+        const scanRes = await scanPlate(cur.b64Full || cur.b64);
+        const finalPlate = scanRes.plate || "";
+
+        if (!finalPlate) {
+          setItems((prev) => prev.map((it) => it.id === itemId ? { ...it, status: "needs_input", source: null } : it));
+          return;
+        }
+
+        if (await checkDup(finalPlate, { brand: scanRes.brand, model: scanRes.model })) return;
+
         setItems((prev) => prev.map((it) =>
           it.id === itemId
-            ? { ...it, status: "duplicate", plate: finalPlate, source: "duplicate", error: "Já no setor" }
+            ? { ...it, status: "done", plate: finalPlate, brand: scanRes.brand || "", model: scanRes.model || "", source: scanRes.from_registry ? "registry" : "ai", error: "" }
             : it
         ));
-        return;
       }
-      const dupItem = await new Promise((r) =>
-        setItems((p) => {
-          r(p.find((x) => x.id !== itemId && x.plate === finalPlate && (x.status === "done" || x.status === "duplicate")));
-          return p;
-        })
-      );
-      if (dupItem) {
-        setItems((prev) => prev.map((it) =>
-          it.id === itemId
-            ? { ...it, status: "duplicate", plate: finalPlate, brand: dupItem.brand, model: dupItem.model, source: "duplicate", error: "Foto duplicada" }
-            : it
-        ));
-        return;
-      }
-
-      // ─── ETAPA 3: Sucesso — salva item com todos os dados ───────────
-      // O scanPlate já buscou no registro local (from_registry) ou usou a IA.
-      setItems((prev) => prev.map((it) =>
-        it.id === itemId
-          ? { 
-              ...it, 
-              status: "done", 
-              plate: finalPlate, 
-              brand: scanRes.brand || "", 
-              model: scanRes.model || "", 
-              source: scanRes.from_registry ? "registry" : "ai", 
-              error: "" 
-            }
-          : it
-      ));
     } catch (e) {
       console.error("Batch item failed:", e);
       setItems((prev) =>
