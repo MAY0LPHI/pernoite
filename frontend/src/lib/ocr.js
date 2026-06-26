@@ -28,10 +28,11 @@ async function getWorker() {
           }
         },
       });
-      // Configura para procurar texto esparso na imagem toda, e não apenas em uma linha
+      // Como agora a imagem é recortada exatamente no formato da placa,
+      // forçamos o modo "7" (linha única) para garantir que ele leia da esquerda para a direita na ordem certa.
       await worker.setParameters({
         tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-        tessedit_pageseg_mode: "11", // Sparse text: acha qualquer bloco de texto solto
+        tessedit_pageseg_mode: "7", // Single text line: força a ordem correta dos caracteres
       });
       _worker = worker;
       _workerReady = true;
