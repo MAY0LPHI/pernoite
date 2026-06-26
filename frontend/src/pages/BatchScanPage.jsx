@@ -145,6 +145,7 @@ export default function BatchScanPage() {
       );
     }, 30000);
 
+    try {
       if (isHybridMode()) {
         // ==========================================
         // MODO HÍBRIDO (Economia de IA)
