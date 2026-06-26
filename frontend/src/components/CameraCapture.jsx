@@ -73,25 +73,21 @@ export default function CameraCapture({ open, onClose, onCapture, scanning, defa
     const w = v.videoWidth || 1280;
     const h = v.videoHeight || 720;
     
-    // O viewfinder na interface tem w-[80%] e uma altura fixa que dá uma proporção de ~2.4:1
-    // Vamos usar 80% da largura e 40% da altura para dar uma margem de respiro para a placa.
-    const cropW = w * 0.80; 
-    const cropH = cropW * 0.40; 
-    const startX = (w - cropW) / 2;
-    const startY = (h - cropH) / 2;
-    
-    const max = 800; // Resolução menor é suficiente e mais rápida para o OCR
-    let cw = cropW, ch = cropH;
-    if (cropW > max || cropH > max) {
-      if (cropW > cropH) { ch = Math.round(cropH * max / cropW); cw = max; }
-      else { cw = Math.round(cropW * max / cropH); ch = max; }
+    // Como estamos usando a IA (Gemini) para ler tudo, precisamos enviar a foto inteira (full frame)
+    // para que a IA consiga enxergar o carro e identificar a marca e modelo.
+    // O crop visual na tela serve apenas para ajudar o usuário a centralizar.
+    const max = 800; // Reduz a resolução para upload rápido
+    let cw = w, ch = h;
+    if (w > max || h > max) {
+      if (w > h) { ch = Math.round(h * max / w); cw = max; }
+      else { cw = Math.round(w * max / h); ch = max; }
     }
     const canvas = document.createElement("canvas");
     canvas.width = cw;
     canvas.height = ch;
-    // Desenha apenas o pedaço central no canvas
-    canvas.getContext("2d").drawImage(v, startX, startY, cropW, cropH, 0, 0, cw, ch);
-    return canvas.toDataURL("image/jpeg", 0.9).split(",")[1];
+    // Desenha o frame completo
+    canvas.getContext("2d").drawImage(v, 0, 0, cw, ch);
+    return canvas.toDataURL("image/jpeg", 0.85).split(",")[1];
   }
 
   function manualCapture() {
