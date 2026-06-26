@@ -64,29 +64,8 @@ function extractPlateFromText(rawText) {
   return "";
 }
 
-/**
- * Lê a placa de uma imagem LOCALMENTE com Tesseract.js.
- * @param {string} base64Jpeg - Imagem em base64 (sem o prefixo data:...)
- * @returns {Promise<{plate: string, confidence: number, raw: string}>}
- */
 export async function recognizePlateLocal(base64Jpeg) {
-  try {
-    const worker = await getWorker();
-    const dataUrl = `data:image/jpeg;base64,${base64Jpeg}`;
-
-    const { data } = await worker.recognize(dataUrl);
-    const rawText = data.text || "";
-    const plate = extractPlateFromText(rawText);
-
-    console.log(`[OCR Local] Texto bruto: "${rawText.trim()}" → Placa: "${plate || "nenhuma"}"`);
-
-    return {
-      plate,
-      confidence: plate ? (data.confidence || 0) / 100 : 0,
-      raw: rawText.trim(),
-    };
-  } catch (e) {
-    console.warn("[OCR Local] Erro no reconhecimento:", e);
-    return { plate: "", confidence: 0, raw: "" };
-  }
+  // OCR local desativado a pedido do usuário para forçar o uso 100% da IA (Gemini).
+  // Retorna vazio imediatamente para acionar o fallback da IA.
+  return { plate: "", confidence: 0, raw: "" };
 }
