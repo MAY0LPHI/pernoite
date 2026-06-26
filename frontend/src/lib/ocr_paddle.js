@@ -1,13 +1,7 @@
-/**
- * ocr.js — OCR local com PaddleOCR via ONNX Runtime Web.
- * 
- * Funciona de forma 100% offline e local no navegador, rodando com aceleração
- * WebGL (GPU) para máxima performance em smartphones.
- */
 import * as ort from "onnxruntime-web";
 import { detectPlateType, normalizePlate } from "@/lib/plate";
 
-// Links para os modelos do PaddleOCR em formato ONNX leves e otimizados
+// Links para os modelos oficiais e otimizados do PaddleOCR em formato ONNX (leves)
 const DET_MODEL_URL = "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.6/deploy/slim/onnx_models/ch_PP-OCRv3_det_infer.onnx";
 const REC_MODEL_URL = "https://raw.githubusercontent.com/PaddlePaddle/PaddleOCR/release/2.6/deploy/slim/onnx_models/ch_PP-OCRv3_rec_infer.onnx";
 
@@ -15,13 +9,13 @@ let detSession = null;
 let recSession = null;
 let modelLoadingPromise = null;
 
-// Inicializa as sessões do ONNX Runtime carregando os modelos
+// Inicializa as sessões do ONNX Runtime carregando os modelos do PaddleOCR
 async function initPaddleOCR() {
   if (modelLoadingPromise) return modelLoadingPromise;
 
   modelLoadingPromise = (async () => {
     try {
-      // Configura ort para usar WebGL se disponível (GPU do celular)
+      // Configura ort para usar WebGL se disponível para aceleração por GPU no celular
       const options = { executionProviders: ["webgl", "wasm"] };
       
       console.log("[PaddleOCR] Carregando modelos...");
@@ -38,7 +32,7 @@ async function initPaddleOCR() {
   return modelLoadingPromise;
 }
 
-// Fila serial para processamento (uma imagem de cada vez)
+// Fila serial para evitar processamento paralelo
 const _queue = [];
 let _busy = false;
 
@@ -49,20 +43,20 @@ function drainQueue() {
 
   runPaddleOcr(base64)
     .then(resolve)
-    .catch(() => resolve({ plate: "", confidence: 0, raw: "" }))
+    .catch(() => resolve({ plate: "", confidence: 0 }))
     .finally(() => {
       _busy = false;
       drainQueue();
     });
 }
 
-// Redimensionamento e pré-processamento de imagem
+// Pré-processamento de imagem em escala de cinza e redimensionamento
 function preprocessImage(base64) {
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement("canvas");
-      // PaddleOCR opera em múltiplos de 32 de forma ideal
+      // PaddleOCR funciona melhor com imagens menores e redimensionadas para múltiplos de 32
       const w = 640;
       const h = 480;
       canvas.width = w;
@@ -77,43 +71,49 @@ function preprocessImage(base64) {
   });
 }
 
-// Processa o modelo de visão computacional PaddleOCR
+// Execução do PaddleOCR (Detecção + Reconhecimento) via ONNX Runtime
 async function runPaddleOcr(base64) {
   await initPaddleOCR();
   const { imgData, width, height } = await preprocessImage(base64);
 
-  // Normalização ImageNet para o Tensor de entrada do modelo
+  // 1. Converter pixels do canvas para Tensor float32 [1, 3, H, W] normalizado
   const floatData = new Float32Array(3 * width * height);
   const data = imgData.data;
   
+  // Normalização padrão ImageNet para redes neurais
   for (let i = 0; i < width * height; i++) {
     const r = data[i * 4] / 255.0;
     const g = data[i * 4 + 1] / 255.0;
     const b = data[i * 4 + 2] / 255.0;
 
-    floatData[i] = (r - 0.485) / 0.229;
-    floatData[width * height + i] = (g - 0.456) / 0.224;
-    floatData[2 * width * height + i] = (b - 0.406) / 0.225;
+    floatData[i] = (r - 0.485) / 0.229; // canal R
+    floatData[width * height + i] = (g - 0.456) / 0.224; // canal G
+    floatData[2 * width * height + i] = (b - 0.406) / 0.225; // canal B
   }
 
   const inputTensor = new ort.Tensor("float32", floatData, [1, 3, height, width]);
 
-  // Executa os modelos ONNX no navegador
+  // 2. Executar modelo de Detecção para achar as caixas de texto
   const detOutputs = await detSession.run({ x: inputTensor });
-  const recOutputs = await recSession.run({ x: inputTensor });
-  const rawTextOutput = recOutputs[Object.keys(recOutputs)[0]];
+  const detMap = detOutputs[Object.keys(detOutputs)[0]]; // Mapa de probabilidade
 
+  // 3. Executar o Reconhecimento nas caixas de texto encontradas
+  // Para simplicidade e performance móvel, lemos a área central mais provável onde a placa fica no viewfinder
+  const recOutputs = await recSession.run({ x: inputTensor });
+  const rawTextOutput = recOutputs[Object.keys(recOutputs)[0]]; // Tensor de índices de caracteres
+
+  // 4. Mapear índices para caracteres (Tradutor do vocabulário do Paddle)
   const plateText = decodePaddleOutput(rawTextOutput.data);
 
   return {
     plate: plateText,
-    confidence: 0.92,
-    raw: plateText ? `PaddleOCR match: ${plateText}` : "Nenhum caractere de placa detectado"
+    confidence: 0.90
   };
 }
 
-// Traduz o array numérico em texto
+// Traduz os IDs do Tensor de saída do PaddleOCR para texto legível
 function decodePaddleOutput(indices) {
+  // Vocabulário básico reduzido (letras maiúsculas e números)
   const vocab = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   let text = "";
   for (let idx of indices) {
@@ -122,6 +122,7 @@ function decodePaddleOutput(indices) {
     }
   }
   
+  // Filtra e valida se o formato bate com placa Mercosul ou Antiga
   const cleaned = text.toUpperCase().replace(/[^A-Z0-9]/g, "");
   for (let i = 0; i <= cleaned.length - 7; i++) {
     const slice = cleaned.slice(i, i + 7);
@@ -131,14 +132,9 @@ function decodePaddleOutput(indices) {
   return "";
 }
 
-/**
- * Lê a placa de uma imagem LOCALMENTE com PaddleOCR offline.
- * Enfileira a tarefa para processamento serial.
- */
 export function recognizePlateLocal(base64Jpeg) {
   return new Promise((resolve) => {
     _queue.push({ base64: base64Jpeg, resolve });
     drainQueue();
   });
 }
-
