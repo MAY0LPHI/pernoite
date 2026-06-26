@@ -315,7 +315,8 @@ async function getAvailableKey(retries = 0) {
 
 async function callGemini(base64, mimeType = "image/jpeg", retries = 0) {
   const { key, idx } = await getAvailableKey(retries);
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+  // Usar o modelo Flash-8B que é EXTREMAMENTE rápido e excelente para tarefas simples de visão
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=${key}`;
 
   const payload = {
     contents: [
