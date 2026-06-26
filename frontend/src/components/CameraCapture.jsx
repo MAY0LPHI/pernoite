@@ -74,9 +74,10 @@ export default function CameraCapture({ open, onClose, onCapture, scanning, defa
     const h = v.videoHeight || 720;
     
     // Para melhorar o OCR local, vamos recortar apenas o centro da imagem
-    // (onde fica o quadrado amarelo do viewfinder na tela), descartando fundo.
-    const cropW = w * 0.7; // 70% da largura
-    const cropH = h * 0.4; // 40% da altura
+    // e forçar uma proporção retangular idêntica à de uma placa de carro.
+    // Isso evita que o OCR leia logos do carro (ex: KWID) se a câmera estiver em pé (retrato).
+    const cropW = w * 0.75; // 75% da largura da imagem
+    const cropH = cropW * 0.35; // Altura sempre proporcional à largura (formato retangular da placa)
     const startX = (w - cropW) / 2;
     const startY = (h - cropH) / 2;
     
