@@ -63,8 +63,8 @@ function compressFile(file) {
         const thumb = thumbCanvas.toDataURL("image/jpeg", 0.75);
 
         // ── B64 (para OCR e envio à IA) ───────────────────────────────────────
-        // Reduzindo o tamanho máximo para 800px para deixar o upload e a IA muito mais rápidos
-        const AI_MAX = 800;
+        // Reduzindo o tamanho máximo para 640px para deixar o upload e a IA muito mais rápidos
+        const AI_MAX = 640;
         let aw = img.width, ah = img.height;
         if (aw > AI_MAX || ah > AI_MAX) {
           if (aw > ah) { ah = Math.round(ah * AI_MAX / aw); aw = AI_MAX; }
@@ -73,7 +73,7 @@ function compressFile(file) {
         const aiCanvas = document.createElement("canvas");
         aiCanvas.width = aw; aiCanvas.height = ah;
         aiCanvas.getContext("2d").drawImage(img, 0, 0, aw, ah);
-        const b64 = aiCanvas.toDataURL("image/jpeg", 0.90).split(",")[1];
+        const b64 = aiCanvas.toDataURL("image/jpeg", 0.80).split(",")[1];
 
         resolve({ b64, thumb });
       };
