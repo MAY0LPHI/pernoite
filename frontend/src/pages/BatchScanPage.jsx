@@ -63,8 +63,8 @@ function compressFile(file) {
         const thumb = thumbCanvas.toDataURL("image/jpeg", 0.75);
 
         // ── B64 (para OCR e envio à IA) ───────────────────────────────────────
-        // Usando alta resolução (Full HD) para garantir que a IA consiga ler a placa na foto inteira
-        const AI_MAX = 1920;
+        // Usando 1200px (meio termo perfeito entre velocidade de upload e nitidez para a IA)
+        const AI_MAX = 1200;
         let aw = img.width, ah = img.height;
         if (aw > AI_MAX || ah > AI_MAX) {
           if (aw > ah) { ah = Math.round(ah * AI_MAX / aw); aw = AI_MAX; }

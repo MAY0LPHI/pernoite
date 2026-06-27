@@ -75,8 +75,8 @@ export default function CameraCapture({ open, onClose, onCapture, scanning, defa
     
     // Como estamos usando a IA (Gemini) para ler tudo, precisamos enviar a foto inteira (full frame)
     // para que a IA consiga enxergar o carro e identificar a marca e modelo.
-    // Usando alta resolução (Full HD) para garantir que a placa fique legível.
-    const max = 1920; 
+    // Usando 1200px (meio termo perfeito entre velocidade de upload e nitidez para a IA)
+    const max = 1200; 
     let cw = w, ch = h;
     if (w > max || h > max) {
       if (w > h) { ch = Math.round(h * max / w); cw = max; }
