@@ -193,12 +193,12 @@ function buildWhatsAppText(session) {
     
     lines.push(`> *${(sector.sector_name || "").toUpperCase()}*`);
     lines.push("");
-    lines.push("`*MARCA - MODELO - PLACA*`");
+    lines.push("`*PLACA - MARCA - MODELO*`");
     lines.push("");
     
     for (const v of vehicles) {
-      const label = [v.brand, v.model].filter(Boolean).join(" ") || "Veículo";
-      lines.push(`* ${label}: ${formatPlateDisplay(v.plate)}`);
+      const details = [v.brand, v.model].filter(Boolean).join(" - ");
+      lines.push(`* ${formatPlateDisplay(v.plate)}${details ? ' - ' + details : ''}`);
     }
     
     lines.push("");
