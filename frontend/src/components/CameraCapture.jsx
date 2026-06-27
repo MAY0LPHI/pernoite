@@ -76,7 +76,7 @@ export default function CameraCapture({ open, onClose, onCapture, scanning, defa
     // Como estamos usando a IA (Gemini) para ler tudo, precisamos enviar a foto inteira (full frame)
     // para que a IA consiga enxergar o carro e identificar a marca e modelo.
     // O crop visual na tela serve apenas para ajudar o usuário a centralizar.
-    const max = 640; // Reduz bastante a resolução para o upload ser instantâneo
+    const max = 800; // Reduz a resolução para upload rápido mas mantém qualidade o suficiente
     let cw = w, ch = h;
     if (w > max || h > max) {
       if (w > h) { ch = Math.round(h * max / w); cw = max; }
@@ -87,7 +87,7 @@ export default function CameraCapture({ open, onClose, onCapture, scanning, defa
     canvas.height = ch;
     // Desenha o frame completo
     canvas.getContext("2d").drawImage(v, 0, 0, cw, ch);
-    return canvas.toDataURL("image/jpeg", 0.80).split(",")[1];
+    return canvas.toDataURL("image/jpeg", 0.85).split(",")[1];
   }
 
   function manualCapture() {

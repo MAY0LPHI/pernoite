@@ -315,9 +315,9 @@ async function getAvailableKey(retries = 0) {
 
 async function callGemini(base64, mimeType = "image/jpeg", retries = 0) {
   const { key, idx } = await getAvailableKey(retries);
-  // Usando o modelo flash-8b que é ultra rápido para reduzir a demora.
-  // Como agora enviamos a foto inteira, ele tem contexto visual para extrair marca/modelo.
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=${key}`;
+  // Voltando para gemini-1.5-flash. O modelo 8b e a resolução baixa deixaram a IA cega para as letras miúdas.
+  // 1.5-flash é o ponto ideal entre velocidade e capacidade de leitura visual.
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
 
   const payload = {
     contents: [
@@ -457,7 +457,7 @@ export async function readPlateOnly(imageBase64, retries = 0) {
   }
   
   const { key, idx } = keyData;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=${key}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
 
   const payload = {
     contents: [{
