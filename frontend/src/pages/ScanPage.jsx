@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PageShell from "@/components/PageShell";
 import CameraCapture from "@/components/CameraCapture";
-import { getSession, updateSession, readPlateOnly, enrichPlate, lookupVehicle } from "@/lib/api";
+import { getSession, updateSession, readPlateOnly, enrichPlate, lookupVehicle, scanPlate } from "@/lib/api";
 import { normalizePlate, formatPlate, isValidPlate } from "@/lib/plate";
 // removed ocr import
 
