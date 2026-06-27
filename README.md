@@ -1,25 +1,26 @@
-# 🌙 Pernoite Ronda Noturna — lovable-pernoite
+# 🌙 Pernoite Ronda Noturna — pernoite
 
-Sistema web completo para controle de veículos em estacionamento durante a ronda noturna. Funciona **100% offline**, sem dependência de servidor externo — todos os dados são salvos no `localStorage` do navegador.
+Sistema web completo para controle de veículos em estacionamento durante a ronda noturna. Funciona **100% offline-first** para o cadastro, e utiliza a API do Google Gemini para realizar OCR automático de imagens enviadas por câmera ou galeria.
 
 ---
 
 ## 🚀 Acesso
 
-**GitHub Pages:** `https://may0lphi.github.io/lovable-pernoite/`
+**GitHub Pages:** `https://may0lphi.github.io/pernoite/`
 
 ---
 
 ## ✨ Funcionalidades
 
-- 📋 **Criação de sessões** de pernoite com nome do vigilante, horário e local
+- 📋 **Criação de sessões** de pernoite com nome do vigilante, horário e data
 - 🏢 **Setores configuráveis** do estacionamento (ZARP, CREDCARROS, Azul, Verde, etc.)
-- 📷 **Escaneamento de placas por câmera ou galeria** com reconhecimento via IA (Gemini Vision)
-- 🤖 **OCR automático** — lê placa, marca, modelo e cor do veículo diretamente da foto
-- 🗃️ **Cadastro de veículos conhecidos** — veículos fichados são identificados automaticamente
-- 📊 **Histórico de rondas** — todas as sessões ficam salvas localmente
-- 📱 **Relatório para WhatsApp** — gera texto formatado pronto para envio
-- 💾 **Offline-first** — funciona sem internet após o primeiro carregamento
+- 📷 **Escaneamento de placas por câmera ou galeria** com reconhecimento via IA (`gemini-2.5-flash`)
+- 🤖 **OCR Inteligente por IA** — lê placa, marca e modelo do veículo com um único envio
+- 🗃️ **Banco de dados estático e dinâmico** — consulta automática localmente (sem gastar tokens) de mais de 300 veículos cadastrados em `vehiclesDB.js` e histórico de sessões anteriores
+- 🔑 **Pool e Rodízio de Chaves de API** — distribui as chamadas de IA entre várias chaves para evitar limites de cota
+- 📊 **Histórico de rondas** — todas as sessões ficam salvas localmente no `localStorage`
+- 📱 **Relatório formatado para WhatsApp** — gera texto pronto no formato `PLACA - MARCA - MODELO` por setor
+- 💾 **Offline-first** — funciona sem internet para navegação e consultas locais de veículos já conhecidos
 
 ---
 
@@ -110,7 +111,8 @@ lovable-pernoite/
     ├── src/
     │   ├── components/         # Componentes React
     │   ├── lib/
-    │   │   ├── api.js          # CRUD local (localStorage)
+    │   │   ├── api.js          # CRUD local (localStorage) e integração Gemini
+    │   │   ├── vehiclesDB.js   # Banco estático de veículos predefinidos
     │   │   ├── keys.js         # Chaves Gemini (ignorado no git)
     │   │   └── keys.example.js # Template das chaves
     │   └── pages/              # Telas da aplicação
