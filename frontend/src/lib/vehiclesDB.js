@@ -781,7 +781,7 @@ export const VEHICLES_DB = {
   },
   "QRM3F36": {
     "brand": "O",
-    "model": ""
+    "model": "HR Bongo (HRR)"
   },
   "MTY0013": {
     "brand": "Mitsubishi",
@@ -801,7 +801,7 @@ export const VEHICLES_DB = {
   },
   "CUD5I18": {
     "brand": "Carreta",
-    "model": ""
+    "model": "Constellation 19.320"
   },
   "IMR3H12": {
     "brand": "Volvo",
@@ -1525,7 +1525,7 @@ export const VEHICLES_DB = {
   },
   "TJX0C19": {
     "brand": "Croos",
-    "model": ""
+    "model": "T-Cross"
   },
   "MTT1D02": {
     "brand": "Toyota",
@@ -1861,7 +1861,7 @@ export const VEHICLES_DB = {
   },
   "SGL8C97": {
     "brand": "Xre",
-    "model": ""
+    "model": "XRE 190"
   },
   "TOG5G15": {
     "brand": "Fazer",
@@ -1869,7 +1869,7 @@ export const VEHICLES_DB = {
   },
   "RBF7A31": {
     "brand": "Xtz",
-    "model": ""
+    "model": "XTZ"
   },
   "PPX9I18": {
     "brand": "Fiat",
@@ -2354,5 +2354,489 @@ export const VEHICLES_DB = {
   "OCW6940": {
     "brand": "Honda",
     "model": "City"
+  },
+  "TEX9G10": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TCI8B00": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TYO7J27": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TZL9J78": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TZK9C88": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TXA6C25": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TZL3I91": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TZK6G85": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TZL3I94": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TYJ4I12": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TEZ3I01": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TCI8F47": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TZL1F62": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TYA4E61": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TXX7A49": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TYA0A61": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TED2G40": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TYO1J53": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TOM8B40": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TYO4B20": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TXX1I21": {
+    "brand": "Veículo:",
+    "model": ""
+  },
+  "TPM6C60": {
+    "brand": "Veículo:",
+    "model": ""
+  },
+  "TCC2A84": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TYD1D61": {
+    "brand": "Veículo:",
+    "model": ""
+  },
+  "TZH5G72": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TXM4J58": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TZQ0A01": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TZQ0I88": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TEX6I42": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TYV7I19": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TYN2G92": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TYA9A02": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TXG2D95": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TEO9A50": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TZR2C02": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TXT5I60": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TXA1697": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TZO3C31": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TZQ0J42": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TYF0A47": {
+    "brand": "Veículo:",
+    "model": ""
+  },
+  "TXA0I33": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TEX6H62": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TXB0F12": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TEC3A43": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TEZ2D19": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TEZ2D78": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TWZ1C50": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TYR5F89": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TEH1C44": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TEZ5G21": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TYK4B74": {
+    "brand": "Veículo:",
+    "model": ""
+  },
+  "TYP4B03": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TXI8B19": {
+    "brand": "Veículo:",
+    "model": ""
+  },
+  "TYC1F64": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TYA8A18": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TXH7G11": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TXE8G12": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TEC6H95": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TEX6J18": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TEX7A36": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TYF3E74": {
+    "brand": "Fiat",
+    "model": "Pulse"
+  },
+  "TEX2H13": {
+    "brand": "Fiat",
+    "model": "Mobi"
+  },
+  "TWZ1C57": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TEZ3I09": {
+    "brand": "Veículo:",
+    "model": ""
+  },
+  "TEZ2D27": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TEX0G72": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TXX0H96": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "CKU8A01": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TXY6B24": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TYD8E74": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TEX7J46": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TYD0H58": {
+    "brand": "Renault",
+    "model": "Kwid"
+  },
+  "TXH6C51": {
+    "brand": "Renault",
+    "model": "Kwid"
+  },
+  "TZO9C88": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TEC6J09": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TZP2E00": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TEY6E82": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TEY0B89": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TYK0B67": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TYK2B26": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TYA4E55": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "FZJ0B57": {
+    "brand": "Ford",
+    "model": "Ka"
+  },
+  "SFU5J35": {
+    "brand": "Toyota",
+    "model": "Hilux :"
+  },
+  "TDA7I42": {
+    "brand": "Chevrolet",
+    "model": "Spin"
+  },
+  "ODF7F44": {
+    "brand": "Fiat",
+    "model": "Palio"
+  },
+  "POF7A28": {
+    "brand": "Toyota",
+    "model": "Etios"
+  },
+  "ODJ8E79": {
+    "brand": "Volkswagen",
+    "model": "Fox"
+  },
+  "DKZ4I21": {
+    "brand": "Hyundai",
+    "model": "Creta"
+  },
+  "GCD0D67": {
+    "brand": "Chevrolet",
+    "model": "Tracker"
+  },
+  "SFP7A12": {
+    "brand": "Toyota",
+    "model": "Yaris"
+  },
+  "SGC1E17": {
+    "brand": "Renault",
+    "model": "Logan"
+  },
+  "SFV0F65": {
+    "brand": "Hyundai",
+    "model": "Creta"
+  },
+  "SYV1J50": {
+    "brand": "Citroën",
+    "model": "C3"
+  },
+  "PPJ5D72": {
+    "brand": "Volkswagen",
+    "model": "Fox"
+  },
+  "RVE0J42": {
+    "brand": "Veículo:",
+    "model": ""
+  },
+  "TXA1G35": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "SGK2A45": {
+    "brand": "Fiat",
+    "model": "Fiorino"
+  },
+  "QRJ2D55": {
+    "brand": "Honda",
+    "model": "Civic"
+  },
+  "TYN6A65": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TYA4E39": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TXX2A83": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TDY0A64": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TEX6J23": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "IXE7115": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TEZ3111": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TUP4B11": {
+    "brand": "Veículo:",
+    "model": ""
+  },
+  "TXN1D57": {
+    "brand": "Veículo:",
+    "model": ""
+  },
+  "TZK2E00": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TYS8E74": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TPM8B40": {
+    "brand": "Veículo:",
+    "model": ""
+  },
+  "TYP4B20": {
+    "brand": "Veículo:",
+    "model": ""
+  },
+  "UAB4E87": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TZP9J78": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TXI8B00": {
+    "brand": "Veículo:",
+    "model": ""
+  },
+  "URC2E74": {
+    "brand": "Dodge",
+    "model": "Journey"
+  },
+  "OYJ1A00": {
+    "brand": "Volkswagen",
+    "model": "Jetta"
+  },
+  "ODD5487": {
+    "brand": "Peugeot",
+    "model": "206"
+  },
+  "QXO0B13": {
+    "brand": "Fiat",
+    "model": "Uno"
+  },
+  "SHC7J34": {
+    "brand": "Hyundai",
+    "model": "Creta"
+  },
+  "SLQ2E29": {
+    "brand": "Hyundai",
+    "model": "Creta"
+  },
+  "HGJ7A75": {
+    "brand": "Volkswagen",
+    "model": ":"
   }
 };
