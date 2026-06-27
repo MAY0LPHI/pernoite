@@ -272,7 +272,7 @@ export async function lookupVehicle(plate) {
 
 let _keyIndex = 0;
 const _keyUsage = {};
-const RPM_LIMIT = 5;
+const RPM_LIMIT = 15;
 
 async function getAvailableKey(retries = 0) {
   if (!GEMINI_KEYS || GEMINI_KEYS.length === 0) {
@@ -315,9 +315,8 @@ async function getAvailableKey(retries = 0) {
 
 async function callGemini(base64, mimeType = "image/jpeg", retries = 0) {
   const { key, idx } = await getAvailableKey(retries);
-  // Voltando definitivamente para gemini-1.5-flash.
-  // O modelo 2.5-flash NÃO EXISTE para a sua chave de API e faz o servidor do Google retornar ERRO 400.
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+  // Voltando para gemini-2.5-flash conforme solicitado (você tem acesso antecipado habilitado)
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
 
   const payload = {
     contents: [
@@ -457,7 +456,7 @@ export async function readPlateOnly(imageBase64, retries = 0) {
   }
   
   const { key, idx } = keyData;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
 
   const payload = {
     contents: [{

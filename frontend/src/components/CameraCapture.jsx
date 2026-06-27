@@ -113,7 +113,7 @@ export default function CameraCapture({ open, onClose, onCapture, scanning, defa
     autoTimerRef.current = setTimeout(() => {
       const b64 = captureFrame();
       if (b64) onCapture(b64);
-    }, 2200);
+    }, 3500);
     return () => {
       if (autoTimerRef.current) {
         clearTimeout(autoTimerRef.current);
