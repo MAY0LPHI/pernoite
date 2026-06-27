@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import PageShell from "@/components/PageShell";
 import { getSession, updateSession, readPlateOnly, enrichPlate, lookupVehicle, scanPlate } from "@/lib/api";
 import { normalizePlate, formatPlate, isValidPlate } from "@/lib/plate";
-import { recognizePlateLocal } from "@/lib/ocr";
+// removed ocr import
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 
 

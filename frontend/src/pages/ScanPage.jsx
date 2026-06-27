@@ -9,7 +9,7 @@ import PageShell from "@/components/PageShell";
 import CameraCapture from "@/components/CameraCapture";
 import { getSession, updateSession, readPlateOnly, enrichPlate, lookupVehicle } from "@/lib/api";
 import { normalizePlate, formatPlate, isValidPlate } from "@/lib/plate";
-import { recognizePlateLocal } from "@/lib/ocr";
+// removed ocr import
 
 function getPendingBatchCount(sessionId, sectorId) {
   try {
