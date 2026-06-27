@@ -101,59 +101,24 @@ export default function ScanPage() {
     setScanning(true);
     const safetyTimer = setTimeout(() => setScanning(false), 25000);
     try {
-      // ─── ETAPA 1: OCR local (Tesseract — sem internet, sem tokens) ──────────
-      const local = await recognizePlateLocal(b64);
-
-      if (local.plate) {
-        // Placa lida localmente!
-        setPlate(local.plate);
-
-        // ─── ETAPA 2: Busca dados no banco local (pernoites anteriores) ───────
-        const lookup = await lookupVehicle(local.plate);
-        if (lookup.found) {
-          // ✅ Dados encontrados localmente — ZERO tokens gastos!
-          if (lookup.vehicle.brand) setBrand(lookup.vehicle.brand);
-          if (lookup.vehicle.model) setModel(lookup.vehicle.model);
-          setLastSource("registry");
-          toast.success("✅ Lido localmente + dados do cadastro — nenhum token gasto!");
-          setCameraOpen(false);
-          return;
-        }
-
-        // ─── ETAPA 3: Placa nova — chama IA só para marca/modelo ─────────────
-        // A placa já sabemos (lida pelo OCR local), IA só precisa identificar o carro
-        try {
-          const res = await enrichPlate(local.plate, b64);
-          if (res.brand) setBrand(res.brand);
-          if (res.model) setModel(res.model);
-          setLastSource("ai");
-          toast.success("🤖 Placa lida localmente + IA identificou o veículo");
-        } catch {
-          toast.success("📷 Placa lida localmente — adicione marca/modelo manualmente");
-        }
-        setCameraOpen(false);
-        return;
-      }
-
-      // ─── FALLBACK: OCR local falhou — usa IA para tudo ──────────────────────
-      // Só chega aqui se o Tesseract não conseguiu ler a placa na foto
-      const plateRaw = await readPlateOnly(b64);
-      if (plateRaw) {
-        setPlate(plateRaw);
-        const res = await enrichPlate(plateRaw, b64);
+      // Usar a mesma lógica otimizada do modo Lote: uma única chamada rápida à IA
+      const res = await scanPlate(b64);
+      
+      if (res.plate) {
+        setPlate(res.plate);
         if (res.brand) setBrand(res.brand);
         if (res.model) setModel(res.model);
         setLastSource(res.from_registry ? "registry" : "ai");
         toast.success(
           res.from_registry
-            ? "✅ IA leu a placa + dados do cadastro"
-            : "🤖 IA reconheceu a placa e o veículo"
+            ? "✅ Placa lida + dados do cadastro local"
+            : "🤖 IA reconheceu o veículo instantaneamente"
         );
         setCameraOpen(false);
       }
-      // else: modo auto continua tentando silenciosamente
+      // Se não ler a placa (modo auto), ele simplesmente ignora e a câmera tenta de novo no próximo frame (a cada 2.2s)
     } catch {
-      toast.error("Falha ao reconhecer. Digite manualmente.");
+      toast.error("Falha ao reconhecer. Tente reposicionar a câmera.");
     } finally {
       clearTimeout(safetyTimer);
       setScanning(false);
