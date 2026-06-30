@@ -182,9 +182,14 @@ function buildWhatsAppText(session) {
   const lines = [];
   const operator = (session.operator_name || "").toUpperCase();
   
+  const totalVehicles = (session.sectors || []).reduce((acc, sector) => {
+    return acc + (sector.vehicles || []).length;
+  }, 0);
+  
   lines.push(`> *VTR NOTURNO  ${operator}*`);
   lines.push(`*PERNOITE - ${session.date}_*`);
   lines.push(`*${session.start_time} horas* / *${session.end_time} hrs_*`);
+  lines.push(`*Total Geral: ${totalVehicles}*`);
   lines.push("");
   
   for (const sector of session.sectors || []) {
@@ -201,6 +206,8 @@ function buildWhatsAppText(session) {
       lines.push(`* ${formatPlateDisplay(v.plate)}${details ? ' - ' + details : ''}`);
     }
     
+    lines.push("");
+    lines.push(`*Total do Setor: ${vehicles.length}*`);
     lines.push("");
     lines.push("*————————————————————*");
     lines.push("");
