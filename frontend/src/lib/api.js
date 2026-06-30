@@ -197,6 +197,7 @@ function buildWhatsAppText(session) {
     if (!vehicles.length) continue;
     
     lines.push(`> *${(sector.sector_name || "").toUpperCase()}*`);
+    lines.push(`*Total do Setor: ${vehicles.length}*`);
     lines.push("");
     lines.push("`*PLACA - MARCA - MODELO*`");
     lines.push("");
@@ -206,8 +207,6 @@ function buildWhatsAppText(session) {
       lines.push(`* ${formatPlateDisplay(v.plate)}${details ? ' - ' + details : ''}`);
     }
     
-    lines.push("");
-    lines.push(`*Total do Setor: ${vehicles.length}*`);
     lines.push("");
     lines.push("*————————————————————*");
     lines.push("");
