@@ -2437,11 +2437,11 @@ export const VEHICLES_DB = {
   },
   "TXX1I21": {
     "brand": "Veículo:",
-    "model": ""
+    "model": "Onix"
   },
   "TPM6C60": {
     "brand": "Veículo:",
-    "model": ""
+    "model": "Onix"
   },
   "TCC2A84": {
     "brand": "Chevrolet",
@@ -2449,7 +2449,7 @@ export const VEHICLES_DB = {
   },
   "TYD1D61": {
     "brand": "Veículo:",
-    "model": ""
+    "model": "Onix"
   },
   "TZH5G72": {
     "brand": "Chevrolet",
@@ -2513,7 +2513,7 @@ export const VEHICLES_DB = {
   },
   "TYF0A47": {
     "brand": "Veículo:",
-    "model": ""
+    "model": "Argo"
   },
   "TXA0I33": {
     "brand": "Fiat",
@@ -2557,7 +2557,7 @@ export const VEHICLES_DB = {
   },
   "TYK4B74": {
     "brand": "Veículo:",
-    "model": ""
+    "model": "Onix"
   },
   "TYP4B03": {
     "brand": "Chevrolet",
@@ -2565,7 +2565,7 @@ export const VEHICLES_DB = {
   },
   "TXI8B19": {
     "brand": "Veículo:",
-    "model": ""
+    "model": "Onix"
   },
   "TYC1F64": {
     "brand": "Volkswagen",
@@ -2609,7 +2609,7 @@ export const VEHICLES_DB = {
   },
   "TEZ3I09": {
     "brand": "Veículo:",
-    "model": ""
+    "model": "Onix"
   },
   "TEZ2D27": {
     "brand": "Hyundai",
@@ -2733,7 +2733,7 @@ export const VEHICLES_DB = {
   },
   "RVE0J42": {
     "brand": "Veículo:",
-    "model": ""
+    "model": "Onix"
   },
   "TXA1G35": {
     "brand": "Fiat",
@@ -2793,11 +2793,11 @@ export const VEHICLES_DB = {
   },
   "TPM8B40": {
     "brand": "Veículo:",
-    "model": ""
+    "model": "Onix"
   },
   "TYP4B20": {
     "brand": "Veículo:",
-    "model": ""
+    "model": "Onix"
   },
   "UAB4E87": {
     "brand": "Hyundai",
@@ -2809,7 +2809,7 @@ export const VEHICLES_DB = {
   },
   "TXI8B00": {
     "brand": "Veículo:",
-    "model": ""
+    "model": "Onix"
   },
   "URC2E74": {
     "brand": "Dodge",
@@ -2838,5 +2838,85 @@ export const VEHICLES_DB = {
   "HGJ7A75": {
     "brand": "Volkswagen",
     "model": ":"
+  },
+  "TXI8F47": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TYA4D51": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TYP7J27": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TYR5G01": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TCA5J43": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TZR5G70": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TZA3C34": {
+    "brand": "Fiat",
+    "model": "Argo"
+  },
+  "TXI0I85": {
+    "brand": "Chevrolet",
+    "model": "Onix"
+  },
+  "TDA6C55": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TYW2C46": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TEP1C57": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TXC3A65": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TWZ2D27": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TXY6B25": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "TZD7A22": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "SFT1A84": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "TEZ0G75": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "SST4B22": {
+    "brand": "Volkswagen",
+    "model": "Polo"
+  },
+  "OYF8B75": {
+    "brand": "Hyundai",
+    "model": "HB20"
+  },
+  "SGE4I28": {
+    "brand": "Chevrolet",
+    "model": "Onix"
   }
 };
